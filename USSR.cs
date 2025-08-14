@@ -18,25 +18,59 @@ namespace USSR.Core
             Console.Title = $"Unity Splash Screen Remover v{appVersion}";
             AnsiConsole.Background = Color.Grey11;
 
+            if (args.Length != 1)
+            {
+                Console.WriteLine("Usage: USSR.exe <asset-path> !!!!!!!!");
+                return;
+            }
+
+            string selectedFile = args[0];
+            bool waitPress = true;
+            if (selectedFile
+                .StartsWith("--"))
+            {
+                selectedFile = selectedFile.Substring(2);
+                waitPress = false;
+            }
+
+            if (!File.Exists(selectedFile))
+            {
+                Console.WriteLine("ASSET-PATH NOT FOUND!");
+                return;
+            }
+
+            int choiceIndex = -1;
+
             while (true)
             {
+                choiceIndex++;
                 PrintHelp();
                 Console.WriteLine();
 
-                string? ussrExec = Path.GetDirectoryName(AppContext.BaseDirectory);
-                string[] menuList = { "Remove Unity Splash Screen", "Remove Watermark", "Exit" };
-                int choiceIndex = GetPromptChoice(menuList);
-                if (choiceIndex == 2)
+                if (choiceIndex >= 2)
+                {
+                    if (waitPress)
+                    {
+                        AnsiConsole.MarkupLine("Press any key to continue...");
+                        Console.ReadKey();
+                    }
                     return;
-                string? selectedFile = OpenFilePicker();
+                }
 
-                if (selectedFile == null)
-                    continue; // Prompt for action again
+                string? ussrExec = Path.GetDirectoryName(AppContext.BaseDirectory);
+                // string[] menuList = { "Remove Unity Splash Screen", "Remove Watermark", "Exit" };
+                // int choiceIndex = GetPromptChoice(menuList);
+                // if (choiceIndex == 2)
+                //     return;
+                // string? selectedFile = OpenFilePicker();
 
-                AnsiConsole.MarkupLineInterpolated(
-                    $"( INFO ) Selected file: [green]{selectedFile}[/]"
-                );
-                Utility.SaveLastOpenedFile(selectedFile);
+                // if (selectedFile == null)
+                //     continue; // Prompt for action again
+
+                // AnsiConsole.MarkupLineInterpolated(
+                //     $"( INFO ) Selected file: [green]{selectedFile}[/]"
+                // );
+                // Utility.SaveLastOpenedFile(selectedFile);
 
                 string webDataFile = Path.Combine(
                     Path.GetDirectoryName(selectedFile) ?? string.Empty,
@@ -231,9 +265,9 @@ namespace USSR.Core
                 }
 
                 AnsiConsole.WriteLine();
-                AnsiConsole.MarkupLine("Press any key to continue...");
-                Console.ReadKey();
-                Console.Clear();
+                // AnsiConsole.MarkupLine("Press any key to continue...");
+                // Console.ReadKey();
+                // Console.Clear();
             }
         }
 
@@ -687,7 +721,8 @@ namespace USSR.Core
                 AnsiConsole.Markup("Which splash screen you want to remove? ");
 
                 InputLogoIndex:
-                string? logoIndex = Console.ReadLine();
+                // string? logoIndex = Console.ReadLine();
+                string logoIndex = "1";
                 if (
                     !int.TryParse(
                         logoIndex,

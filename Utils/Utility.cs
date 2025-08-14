@@ -174,7 +174,7 @@ namespace USSR.Utilities
         internal static string? GetVersion()
         {
             if (!File.Exists(VERSION_FILE))
-                return "UNKNOWN";
+                return "_UNKNOWN";
 
             using StreamReader reader = new(VERSION_FILE);
             return reader.ReadLine();
